@@ -1,0 +1,1004 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>ALPACA Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+body{
+    background-color: #d0d0d0;
+    font-family: sans-serif;
+}
+.content {
+    background-color: #ffffff;
+    width: 1000px;
+    padding: 20px;
+    margin-top:0px;
+    margin-left:auto;
+    margin-right: auto;
+}
+.heading {
+	background-color: #99CCFF;
+	border: 2px solid #000000;
+	width: 90%;
+	padding: 5px 5px 5px 5px;
+	text-align: center;
+	margin-left:auto;
+	margin-right:auto;
+}
+h4{
+	text-decoration: underline;
+}
+.code {
+	border: 1px solid #cccccc;
+	font-family:"Courier New", Courier, mono;
+	font-size:12px;
+}
+.style1 {color: #808080}
+.style2 {color: #999999}
+</style>
+</head>
+
+<body>
+<div class="content">
+
+<h1>ALPACA: Actionscript LDU Point-And-Click Adventure</h1>
+<p>Version 2.1 </p>
+<h2><u>New in 2.1</u></h2>
+<ul>
+	<li>Save games have editable IDs to avoid conflicts with multiple projects or versions of the same project</li>
+</ul>
+<h2><U>New In 2.0</U></h2>
+<ul>
+<li>Save and restore games in Flash Player's local memory!</li>    
+<li>External files have switched from XML to the much-more-readable JSON format </li>   
+	<li>Various bug fixes and code cleanup
+    </li>
+    </ul>
+<h2>Getting Started: A Guided Tour of the Sample Project</h2>
+<h2><U>Contents</U></h2>
+<ol>
+	<div id="contents">
+	</div>
+</ol>
+
+      <p>This tour through the sample project files will explain how the different classes work with each other and with the main .fla file. You will need to understand the fundamentals of programming and Actionscript syntax to make sense of all this. If you're new to Flash and/or programming, I recommend you check out some of the tutorials at <a href="http://www.foundation-flash.com">Foundation Flash</a> to give you the knowledge base you'll need to make use of ALPACA.</p>
+	  <p>Or you can just dive right in and pick it up as you go. That's basically what I did. Let's get started with our Flash file, <strong>alpaca_sample_project.fla.</strong></p>
+	  <h3 class="heading"><a name="fla">alpaca_sample_project.fla</a></h3>
+	  <p>Open up <strong>alpaca_sample_project.fla </strong>and let's take a look. The first thing you'll see is nothing, just a blank stage. All the movieclips and classes are loaded dynamically by the Engine class. Click on the blank stage and take a look at the Class field in the Properties window.</p>
+<p><img src="images/document_class.jpg" width="335" height="175"></p>
+	  <p>It's cut off because it's long, but the full path is <strong>com.laserdragonuniversity.alpaca.Engine</strong>. If you looked at the project folder, you'll find that this refers to the file <strong>com/laserdragonuniversity/alpaca/Engine.as</strong>. Flash will load this and execute its code as soon as you publish the file, so <strong>Engine.as</strong> is the core of all our code for this game. We'll dive into our Actionscript files in a little bit.</p>
+	  <p>Let's take a look at the Library. I've organized all the elements of the .fla file into these folders, which should hopefully be self-explanatory.</p>
+	  <p><img src="images/folders.jpg" width="203" height="394"></p>
+	  <p>Feel free to reorganize the library as you see fit - it won't affect code execution at all. Open up the playerElements folder and double-click on <strong>Player.</strong></p>
+	  <h4><a name="player" id="substart">Player</a></h4>
+	  <p><img src="images/al.jpg" width="800" height="603"></p>
+	  <p>That's Al the Panda, our protagonist for this game. Note that his name in the library is capitalized. That's because Player is not just a movie clip in this .fla file, but a class. Right-click on Player in the Library and select &quot;Properties&quot; to see what that means.</p>
+	  <p><img src="images/player_linkage.jpg" width="479" height="611"></p>
+	  <p>Note that &quot;Export for Actionscript&quot; is checked. <strong>This is vital. </strong>If you don't check this box, you won't be able to call up an element from your library using code. Actionscript will be completely blind to its existence. Note also that the Class dialog contains <strong>com.laserdragonuniveristy.alpaca.Player</strong>. This is likewise vital - it means that this movie clip is joined at the hip with the file <strong>com/laserdragonuniversity/alpaca/Player.as</strong>. That .as file defines all the Player's attributes and functionality.</p>
+	  <p>Take a look at the Timeline on top of your screen.</p>
+	  <p><img src="images/al_layers.jpg" width="278" height="274"></p>
+	  <p>You'll notice that there are four frames for the Player class. Click on the &quot;labels&quot; layer and look at the Properties tab to see the names of each frame. They are <strong>default</strong>, <strong>walk</strong>, <strong>talk</strong>, and <strong>grab. </strong>The &quot;actions&quot; layer contains only one line of code per frame, <strong>stop();</strong>, to ensure that the playhead doesn't just loop endlessly over the different frames. The &quot;player&quot; layer contains a different movie clip for each frame. These are the movie clips <strong>playerSide, playerWalk, playerTalk </strong>and <strong>playerGrab<em>, </em></strong>all of which can be found in the library. Once we start diving into the code, you'll see that when the player performs any of these actions, we simply change <strong>Player's </strong>frame and we get the corresponding animation. This way we don't need to grab another clip from the library and swap it out with the current Player clip, which could get cumbersome.</p>
+	  <p>If you check the properties for these movie clips, you'll find that they're not exported for Actionscript. That's because we don't ever need to call these from code. Open up these movie clips and you can tweak or completely change the animations within. </p>
+	  <p>If and when you create a new main character, make sure that your character contains at least four frames with the labels <strong>default, walk, talk </strong>and <strong>grab</strong>, or you'll get errors.</p>
+	  <p>The bottom layer, <strong>hitspot</strong>, contains a clip of the same name made up of Al's shadow. That clip is what the engine uses to determine if the player has hit another object - more precisely, an obstacle. <strong>The Player always needs a hitspot. </strong>When creating your own player, you don't necessarily have to make the hitspot a shadow, but it does need to be there. </p>
+	  <p>That's all we need to know about the Player class for now; later on we'll open up the Player.as file and go over its actual functionality. Let's just quickly review our ground rules: </p>
+	  <p><strong>Player must:</strong> </p>
+	  <ul>
+	    <li>Contain frames with the labels <strong>default, walk, talk, </strong>and <strong>grab</strong></li>
+	    <li>Contain a movie clip named <strong>hitspot </strong>that can be used to determine when obstacles are encountered </li>
+      </ul>
+	  <h4><a name="tundra">tundra: The First Background</a></h4>
+	  <p>Now let's move on. Go ahead and open up the backgroundElements folder - we're going to take a look at our different backgrounds. Open up the tundra subfolder - this contains everything you see in the first background of the game. Note that <strong>tundra<em>, </em></strong>the main movie clip, is not capitalized. If you open up its properties, you'll see that it's not capitalized there either - and it doesn't have a long classpath like Player did.</p>
+	  <p><img src="images/tundra_linkage.jpg" width="447" height="231"></p>
+	  <p>Why is that? Well, <strong>tundra </strong>is just a regular movie clip, and it has no corresponding class / .as file. The backgrounds are all controlled by a class called <strong>Background.as</strong>, which loads these movie clips from the Library. We could make each background its own class if we wanted, but that would lead to a lot of duplicate code and some major headaches if we needed to change something. So I've kept things simple.</p>
+	  <p>Double-click to open up the <strong>tundra</strong> clip.</p>
+	  <p><img src="images/tundra.jpg" width="800" height="622"></p>
+	  <p>You probably don't remember all those lines and colored dots from when you played the demo. They were there, but they were made invisible at runtime. Keeping them visible here makes it easier to lay out your scene. Now, let's break this clip down layer-by-layer.</p>
+	  <p>The &quot;sky&quot; layer is that big image of a mountain in the back. Click once on it and look at the Properties - this is a movie clip with the instance name <strong>mountains_L</strong>. That instance name is very important; it tells the game engine what kind of properties, if any, this movie clip has. In this case, &quot;mountains&quot; is the display name of the clip (you'll see it show up on the bottom right of the screen - &quot;Look at MOUNTAINS&quot;, etc.). The <strong>&quot;_L&quot; </strong>part tells the engine that the player can <strong>look</strong> at this clip, and get a description. All the interactive elements in your background have their properties assigned this way. Here's a key:</p>
+	  <h4><a name="itemprops" id="itemprops">Item Properties</a></h4>
+	  <ul>
+	    <li><strong>_L </strong>= Look-at-able (player can examine the element for a description) </li>
+	    <li><strong>_U = </strong>Usable (player can manipulate the object in some way. Even if _U is not present, the player still has the option to &quot;use&quot; the item; they'll simply get a description of why they can't use it)</li>
+	    <li><strong>_G = </strong>Gettable (player can add this item to the inventory) </li>
+	    <li><strong>_T </strong>= Talk-to-able (allows dialog with other characters) </li>
+	    <li><strong>_O </strong>= Obstacle (something the player needs to walk around)</li>
+	    <li><strong>_F </strong>= Foreground element (a part of the background that should always be on top of everything else)</li>
+      </ul>
+	  <p>If you click on the rock in the middle of the scene, you'll see that its instance name is <strong>rock_O_G</strong>. The <strong>_G </strong>property automatically assigns the <strong>_L </strong>and <strong>_U </strong>properties, which means rock_O_G is an Obstacle, is Look-at-able, is Usable, and is Gettable. It doesn't matter what order the letters come in, as long as they're <strong>after </strong>the clip's display name.</p>
+	  <p><strong>The _U property automatically assigns the _L property. </strong></p>
+	  <p><strong>The _G and _T properties automatically assign the _L and the _U properties.</strong></p>
+	  <p>By changing instance names, you can easily add and change functionality to different parts of your background. But your job isn't quite over yet. You'll need to make sure each movie clip is set up with the proper elements for each letter you place after its name. That's what all those colored dots are for.</p>
+	  <p>Double-click on <strong>mountains_L</strong> to open the clip. Click toward the top of the image and you should select an invisible movie clip with the instance name <strong>usableArea.</strong></p>
+	  <h4><a name="usablearea" id="usablearea">usableArea</a></h4>
+	  <p><img src="images/mountain_uarea.jpg" width="800" height="510"></p>
+	  <p>Double-click on usableArea and you'll see that the movieclip contains a simple rectangle with its alpha set to 0. This is the <strong>usableArea</strong> clip in the userInterface folder, a simple 100x100 square resized to fit the area we want. Since this mountain backdrop is very large, we set a smaller usable area for the player to click on so it doesn't conflict with other background elements. This area has to be rectangular; even if we draw a custom shape, Flash will only interpret the bounding box around it, so you're best off using a rectangle for accuracy. </p>
+	  <p>You don't need to put usableAreas in your movie clips, but I recommend it. Keep in mind that Flash considers the hit area of any movie clip to be the bounding box around the entire thing - including all those dots and lines that I'll go over in a minute. Without a usableArea, the hit area will extend well beyond the visible part of your movie clip most of the time. </p>
+	  <h4><a name="usepoint" id="usepoint">usePoint, nodes, and depthSplit</a></h4>
+	  <p>Navigate back to the <strong>tundra </strong>clip and let's take a look at <strong>rock_O_G </strong>again. Double-click on the rock and note the different layers. Like mountains_L, this clip contains a usableArea, but it also has a bunch of other stuff. The red dot is the <strong>usePoint<em>, </em></strong>or the point to which the player will walk when the item is going to be manipulated, talked to, or (in this case) picked up. The black dots are <strong>nodes, </strong>each with a name corresponding to its position: <strong>nodeUL </strong>(Upper Left), <strong>nodeUR, nodeLL, nodeLR. </strong> These points define the perimeter around the clip; the player will walk to these points when navigating around an obstacle. The black line in the middle is the <strong>depthSplit</strong>, or the point at which the player either goes behind or comes in front of the object. <strong>All clips with the _O property need to have the four nodes and the depthSplit.</strong></p>
+	  <p><img src="images/rock.jpg" width="272" height="176"></p>
+	  <p>There's no real science to the placement of the nodes or the depthSplit; when you create a new obstacle, just keep playing with it until the player's movement around it looks natural.</p>
+	  <h4><a name="proper">proper</a></h4>
+	  <p>The rock itself is a movie clip buried under everything else and named <strong>proper. </strong><strong>All clips with the _O property need to have a clip called &quot;proper&quot; in them, which is used to determine the object's hit area. </strong>This particular clip is an instance of <strong>rockProper, </strong>and if you check its Linkage in the Library you'll see it's exported for Actionscript with that name. The clip rockProper is the one that appears, and is dragged around the screen, when the player selects it from the inventory. You'll also see <strong>rockInv</strong> in the Library, which is the clip used for the rock as it appears in the inventory itself. <strong>All clips with the _G property need to have [item]Proper and [item]Inv clips, exported for Actionscript, in the Library. </strong>We'll see why once we open up Inventory.as later on. </p>
+	  <p>Back in the <strong>tundra </strong>clip, let's look at the <strong>ground </strong>movie clip on the layer of the same name. This defines the area on which the player can walk. <strong>Every background needs a ground movie clip. </strong>This clip doesn't require anything special, just the proper instance name.</p>
+	  <p><img src="images/ground.jpg" width="836" height="366"></p>
+	  <p>If you look at <strong>ledge_O_L, </strong>you'll see it's much like rock_O_G; the only difference is that it's not gettable. It still has a usePoint, because at the end of the demo the player is able to use the balloon on it. Since the ledge is not an actual physical obstruction but a gap, its depthSplit has been placed high above it, so the player will always appear in front of it (although, since it's invisible, this doesn't really matter). </p>
+	  <p><img src="images/ledge.jpg" width="800" height="376"></p>
+	  <h4><a name="startpoints">startPoints</a></h4>
+	  <p>On the <strong>startPoint </strong>layer you'll find two blue circles: <strong>startPoint </strong>and <strong>startPoint_hangar. </strong>The first defines the point where the player first appears when the game starts. The second defines where the player appears when they have entered from &quot;hangar&quot;, the next background in that direction.</p>
+	  <h4><a name="exits">EXITs</a></h4>
+	  <p>On the <strong>exits </strong>layer, there's a single clip called <strong>EXIT_hangar</strong>. When the player clicks on this, they will walk to the corresponding startPoint - in this case, <strong>startPoint_hangar</strong> - and enter the next background upon reaching it. <strong>All exits need to be named in this format: &quot;EXIT&quot; followed by an underscore and the name of the next background. The name after &quot;EXIT_&quot; must match the name after &quot;startPoint_&quot;.</strong></p>
+	  <p><img src="images/exit_hangar.jpg" width="400" height="425"></p>
+	  <p><strong>The next background will need a point called &quot;startPoint_&quot; followed by the name of this background. </strong>As an example, open up the <strong>hangar </strong>movie clip in the library and look at the right side. There's an exit called <strong>EXIT_tundra, </strong>leading back to the tundra background, and underneath is <strong>startPoint_tundra.</strong></p>
+	  <p>[<img src="images/hangar_sp.jpg" width="712" height="415"></p>
+	  <p>Back to the <strong>tundra </strong>clip for the final layer, &quot;actions.&quot; This layer contains some code that creates the snowflakes in the background. It's completely optional, so don't worry about it for now. Backgrounds don't need an action layer at all.</p>
+	  <p>OK, we just laid down a whole lot of rules for setting up a scene. It might seem overwhelming right now, but it'll get to be second nature as you build your own backgrounds. Let's review all of our ground rules for background so far.</p>
+	  <h4><a name="backgroundprops" id="subend">Background Properties</a></h4>
+	  <p><strong>Backgrounds must:</strong></p>
+	  <ul>
+	    <li>Be movie clips</li>
+	    <li>Be exported for Actionscript</li>
+	    <li>Contain a <strong>ground </strong>movie clip</li>
+	    <li>Contain at least one <strong>startPoint</strong></li>
+      </ul>
+	  <p><strong>Lookable items  must:</strong> </p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>[display name]_L</strong> </li>
+      </ul>
+	  <p><strong>Usable items  must:</strong> </p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>[display name]_U</strong></li>
+	    <li>Contain a <strong>usePoint</strong> </li>
+      </ul>
+	  <p><strong>Gettable items must:</strong> </p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>[display name]_G</strong></li>
+	    <li>Contain a <strong>usePoint</strong> </li>
+	    <li>Have corresponding clips named <strong>[item]Proper </strong>and <strong>[item]Inv </strong>in the Library, exported for Actionscript </li>
+      </ul>
+	  <p><strong>Talkable items must: </strong></p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>[display name]_T</strong> </li>
+	    <li>Contain a <strong>usePoint</strong> </li>
+      </ul>
+	  <p><strong>Obstacles must:</strong> </p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>[display name]_O</strong></li>
+	    <li>Contain four <strong>nodes </strong>establishing a perimeter</li>
+	    <li>Contain a <strong>depthSplit </strong></li>
+	    <li>Contain a clip called <strong>proper </strong>that determines the item's actual physical presence</li>
+	    
+      </ul>
+	  <p><strong>Exits must: </strong></p>
+	  <ul>
+	    <li>Have instance names consisting of <strong>EXIT_[next background] </strong></li>
+	    <li>Have a corresponding point named <strong>startPoint_[next background] </strong></li>
+	    <li>Have a correspoing point in the next background named <strong>startPoint_[this background] </strong></li>
+      </ul>
+	  <p>&nbsp;</p>
+	  <p>That basically sums up the requirements for background movie clips.  Now we're going to look at some of the code that's running this whole operation.  Keep the .fla project open - we'll be referring back to it as we go. </p>
+	  <p>Before we dive into the code proper, let's take a quick look at our configuration file. It's called <strong>config.js</strong> and you'll find it in the data folder.</p>
+	  <h3 class="heading"><a name="config.js">config.js</a></h3>
+	      <p>The config file is not very long and should be pretty self-explanatory. It's in JSON format, which is a nice simple way to store data as text.</p>
+	      <div class="code">
+	          <blockquote>
+	            {
+	                <blockquote>
+	                    "gameURL":"alpaca_sample_project.swf",<br/>
+                          "useAudio": true,<br/>
+                          "playerScale":"1",<br/>
+                          "walkRate":"15",<br/>
+                          "targetBuffer":"20",<br/>
+                          "playerName":"Player",<br/>
+                          "firstLocation":"tundra",<br/>
+                          "musicURL": "audio/bgmusic.mp3",<br/>
+                          "endMusicURL": "audio/ending.mp3",<br/>
+                          "saveURL": "data/savegame.php",<br/>
+                          "saveID": "alpacasample",<br/>
+                          "thisVersion":"Version 2.1"<br/>
+                    </blockquote>
+	            }
+	        </blockquote>
+	    </div>
+	    <p>Each line of the file is going to be loaded into our game when it starts and used throughout the engine. The property names are on the left and the values are on the right, as you probably guessed. Here's a quick rundown on what each property does:</p>
+	    <ul>
+	        <li><strong>gameURL</strong> is the .swf file that gets exported from our project. The <strong>container.swf</strong> file is going to load this, and show a progress bar as it loads. You don't actually have to use the container, but it's nice to have a progress bar so your users know that the game is actually loading and not missing or buggy.</li>
+	        <li><strong>useAudio</strong> tells the engine whether we're using audio for the characters' lines, as opposed to just subtitles. This does not affect background music or sound effects placed directly in movie clips.</li>
+	        <li><strong>playerScale</strong> affects how large the player movie clip appears in the game. If you create custom movie clips for actions (like when Al throws the rock at the door), this setting won't affect those - so I recommend sticking to 1, and just resizing your player clip manually. If you have a simpler game, though, this might be a quick way to do some tweaking.
+	        <li><strong>walkRate</strong> is the number of pixels that the player moves per frame.
+	        <li><strong>targetBuffer</strong> is the distance, in pixels, that the player can be from a clicked point on the ground before the walk action stops. We'll talk a bit more about this later on.
+	        <li><strong>playerName</strong> doesn't really do anything yet; I put this here to give the player a display name in case we want to use items on the player him/herself, which you can't do at the moment unless you tweak the code.
+	        <li><strong>firstLocation</strong> is the name (in the library) of the background in which the game starts.
+	        <li><strong>musicURL</strong> is the location of the background music. You can leave this blank (set it to empty quotes: "") if you don't have background music.
+	        <li><strong>endMusicURL</strong> is the music that plays over the end screen. You can ignore this if you plan to do an elaborate ending animation or anything custom like that.
+	        <li><strong>saveURL</strong> does nothing, currently. There's space in the code to implement external server-side saved games, but I didn't think it was worth putting together at this point.
+	        <li><strong>saveID</strong> actually does something - namely, it identifies the location of saved games in Flash's local memory. Make sure you change this to something unique when you make a new project so you don't get conflicts.
+	        <li><strong>thisVersion</strong> is just the current version of ALPACA. This is not very important.
+	        </ul>
+	     <p>All right, now for the actual Actionscript. We'll start with our document class, <strong>Engine.as.</strong></p>
+	  <h3 class="heading"><a name="engine">Engine.as</a></h3>
+	  <p>Like all our Actionscript files, this can be found in the <strong>com/laserdragonuniversity/alpaca</strong> folder. This is the class that our game loads first, and it runs the show from that point on. Most of our game-specific variables are defined in this class, so ideally you should need to do very little altering of the other classes, if any at all. </p>
+	  <p><strong>The only .as file you <em>need</em> to alter to create your own game is Puzzle.as. </strong>All the other classes are designed to function dynamically based on your .fla project file and your configuration files, and require as little tweaking as possible. We'll get to Puzzle.as after this.</p>
+	  <p>The top of the Engine class contains all this code:</p>
+	  <div class="code">
+	    <blockquote>
+	      package com.laserdragonuniversity.alpaca {
+	      <blockquote>import flash.display.MovieClip;<br>
+	        import flash.events.*;<br>
+	        import flash.display.Stage;<br>
+	        import flash.display.DisplayObject;<br>
+	        import flash.net.URLLoader;<br>
+	        import flash.net.URLRequest;<br>
+	        import com.adobe.serialization.json.*;<br>
+	        <blockquote>public class Engine extends MovieClip{
+            </blockquote>
+          </blockquote>
+        </blockquote>
+	    
+      </div>
+	  
+	  <p>This is where we establish our class path, and import all the different Flash goodies that we need to make things function. None of this needs to be changed, so don't worry too much about it. The real meat comes after our class declaration.</p>
+	  <h4><a name="enginevars" id="substart">Variables</a></h4>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            public static var player:Player;<br>
+	            public static var back:Background;
+	            <br>
+	            public static var newBack:String;
+	            <br>
+	            public static var toolbar:Toolbar;
+	            <br>
+	            public static var inv:Inventory;
+	            <br>
+	            public static var options:Options;
+                <br>
+				public static var saver:SaveRestore;
+	            <br>
+	            public static var useBox:UseBox;
+	            <br>
+	            public static var puzzle:Puzzle;<br>
+	            <br>
+	            private var opening:MovieClip;
+	            <br>
+	            private var ending:MovieClip;
+	            <br>
+	            <br>
+	            public static var obstacles:Array = new Array();
+	            <br>
+	            public static var usableItems:Array = new Array();
+	            <br>
+	            public static var foreground:Array = new Array();
+	            <br>
+	            public static var exits:Array = new Array(); 
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+	    
+	    
+      </div>
+	  <p>Yikes, that's a lot all at once. Don't be alarmed - we're just declaring all of our variables. The first block is almost all made up of our custom classes, the names of which should be self-explanatory. The <strong>newBack</strong> string will be used when the player enters a new background. All of these are public, static variables because the other classes will need to refer back to them and sometimes write to them. </p>
+	  <p>The second block defines <strong>opening </strong>and <strong>ending</strong>, which are the movie clips that show up at the beginning and ending of the game. The third block defines the arrays that will keep track of our various background elements while the player explores the scene.</p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            private var musicURL:String;<br>
+	            private var endMusicURL:String;
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+	    
+	    
+      </div>
+	  <p>These two strings define the path to the music files used in the demo. Their values come from the external configuration file. I opted to have the music loaded from an external file in order to keep the .swf file size down. You can also embed audio in the background movie clips if you want it to change with every screen, but keep in mind that this will increase your file size. </p>
+	  <p>&nbsp;</p>
+       <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            private var saveURL:String;<br>
+				private var saveID:String;
+              </blockquote>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+	    
+	    
+      </div>
+	  <p> Like the music URLs, this value comes from the configuration file. saveID is used to name our saved games in Flash's local memory. You should give it a unique name so you don't overwrite the data from another project if you're saving games; this can disable the save feature until you clear the local memory. saveURL doesn't do anything right now, but in future versions it will point to the external script that saves games as separate files.</p>
+<p>&nbsp;</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>public static var useAudio:Boolean;<br>
+	            private var playerScale:Number;<br>
+private var walkRate:Number;<br>
+public static var targetBuffer;<br>
+public static var playerName:String;<br>
+public static var playerControl:Boolean = true;<br>
+public static var restoring:Boolean = false;</blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+	    
+      </div>
+	  <p>All this code will come from our external configuration file. <strong>useAudio </strong>is based on whether you're using audio for the dialog lines or not (sound effects and music are not affected). <strong>playerScale </strong>is the size of the player onscreen (1 being 100%, so .5 would be half size, and 2 would be double). It only affects the player during normal play, however - it won't change the player's size in movie clips, so make sure to decide early on how large your character needs to be! </p>
+	  <p><strong>walkRate </strong>is the number of pixels the player moves per frame while walking. <strong>targetBuffer </strong>is how close the player needs to be, in pixels, to be considered to have reached a given point. This needs to be here because otherwise the player will never exactly, down to the fraction of a pixel, reach the spot where the user has clicked. <strong>walkRate and targetBuffer need to work together to allow the player to move and avoid obstacles properly. </strong>Again, there's no science to this - it's going to vary depending on how large your player is, how large the background is, etc., so if you change these things you'll need to experiment with these values until movement appears to work correctly. </p>
+	  <p><strong>playerName </strong>will later be assigned to the Player class' <strong>.name </strong>property, and it's only used at the moment to identify the player as such to the <strong>Subtitle </strong>class. If you're going to change it here, make sure you change the reference in the <strong>Subtitle </strong>class so it can determine that the player is supposed to be talking.</p>
+	  <p><strong>playerControl </strong>is a Boolean value that determines whether the user can click on background items, move their character, or access the inventory and options. It's set to false whenever the player is performing an action or in the middle of a dialog, so the user can't screw things up by starting two movie clips at once.</p>
+	  <p><strong>restoring</strong> is a Boolean value that lets the Engine know if the background is being loaded from a saved game, and not from the player walking into a new room.</p>
+<p>&nbsp; </p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            private var firstLocation:String;<br>
+              public static var lastLocation:String;</blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>The <strong>firstLocation </strong>variable tells the <strong>Background </strong>class which background clip to load first, when the game starts. <strong>This initial background clip needs to have a startPoint movie clip, or it won't know where to place the Player and it won't load. </strong></p>
+	  <p>The <strong>lastLocation </strong>string is used to remember which background the player just left upon entering a new one. Then the player can be placed at the proper entrance, if there are more than one.</p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>public static var configData:Object = new Object;<br>
+public static var linesData:Object = new Object;<br>
+private var speechLoader:URLLoader;<br>
+private var configLoader:URLLoader;<br>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>These variables allow us to load external JSON files that contain all the text for the player's observations and dialog lines (we'll go over how those files are structured in a bit). This way, we can easily change those lines after we've already published the game, without having to recompile anything. If you choose to use actual audio clips for these lines, however, you will have to re-import them into the .fla file and then recompile the project. You can change the <strong>Speech </strong>class to grab those clips from external .mp3 files if you want, but I chose to export them with the .swf so there's no risk of lag time when the player starts talking. It's up to you. </p>
+	  <p>&nbsp;</p>
+	  <p>Now for our last bit of variable declaration:</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote> private var rmenu:RightClickMenu = new RightClickMenu();<br>
+              </blockquote>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </div>
+	  <p>The <strong>RightClickMenu </strong>class changes the context menu that appears when the user alternate-clicks on the .swf file, so we can provide a link to the ALPACA home page. Unfortunately, this only sometimes works, and I can't figure out why. </p>
+	  <p></p>
+	  <p>Now for our Engine function. It's a simple one, and the comments should explain it well enough.</p>
+	  <h4><a name="enginefunction">Engine()</a></h4>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            public function Engine(){
+	            <blockquote><span class="style2">/* This roundabout code is necessary to allow the exported alpaca.swf to be dynamically loaded<br>
+into container.swf (that way we can make a load progress bar).  We get errors without it.<br>
+This can cause movie clips to behave strangely sometimes - you may need to put code in certain<br>
+clips in order to ensure that they stay stopped on the first frame like they're supposed to */</span><br>
+                addEventListener(Event.ADDED_TO_STAGE, startGame);</blockquote>
+              }</blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>So the real code is in the startGame function immediately below.</p>
+	  <h4><a name="startgame">startGame</a></h4>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            private function startGame(e:Event):void{<br>
+	            
+	            <blockquote>
+	              <p>removeEventListener(Event.ADDED_TO_STAGE, startGame);<br>
+                    <br>
+                    <span class="style2">// Load external configuration data</span><br>
+var jsURL = new URLRequest(&quot;data/config.js&quot;);<br>
+configLoader = new URLLoader(jsURL);<br>
+configLoader.addEventListener(&quot;complete&quot;, configLoaded);<br>
+<br>
+<span class="style2">// Load all spoken lines</span><br>
+jsURL = new URLRequest(&quot;data/speechlines.js&quot;);<br>
+speechLoader = new URLLoader(jsURL);<br>
+speechLoader.addEventListener(&quot;complete&quot;, linesLoaded);<br>
+<br>
+<span class="style2">// Change the context menu to link back to the ALPACA home page<br>
+// This doesn't always work, for some reason</span><br>
+contextMenu = rmenu.returnMenu();<br>
+<br>
+stage.addEventListener(&quot;changeBackground&quot;, changeBackground, false, 0, true);</p>
+	            </blockquote>
+	            } 
+	            </p>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>We start by removing the event listener (an important step - things can get weird if you don't do that whenever you can) that set off this function. Then we grab our external data files: one for configuration settings, and one for all the dialog and spoken lines. Both these files will be decoded and applied to the project in the <strong>configLoaded</strong> and<strong> linesLoaded </strong>functions below. We add the custom context menu. The <strong>&quot;changeBackground&quot; </strong>event listener will pick up on the player leaving the background through one of its EXITs and change the background accordingly. </p>
+	  <p>So now we see what happens to the external data that we just loaded:</p>
+      <h4><a name="linesloaded">linesLoaded and configLoaded</a></h4>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <p>private function linesLoaded(e:Event):void{<br>
+                <blockquote> linesData = JSON.decode(speechLoader.data);</blockquote>
+	              }<br>
+  <br>
+	              private function configLoaded(e:Event):void{<br>
+	              <blockquote>configData = JSON.decode(configLoader.data);<br>
+	              useAudio = configData.useAudio;<br>
+	                playerScale = configData.playerScale;<br>
+	              walkRate = configData.walkRate;<br>
+	              targetBuffer = configData.targetBuffer;<br>
+	              playerName = configData.playerName;<br>
+	              firstLocation = configData.firstLocation;<br>
+	              musicURL = configData.musicURL;<br>
+	              endMusicURL = configData.endMusicURL;<br>
+	              saveURL = configData.saveURL;<br>
+                  saveID = configData.saveID;<br>
+
+  <br>
+	              createBackground(firstLocation);<br>
+	              createUI();</p>
+	            <p> <span class="style2">// This needs to be here or Flash gets annoyed</span><br>
+	              useBox = new UseBox(stage, usableItems[0]);<br>
+  <br>
+	              <span class="style2">// Add the intro screen over everything else<br>
+	              // This can be a fully animated intro if we want - anything that fits in a movie clip</span><br>
+	              opening = new introScreen;<br>
+	              opening.vtext.text = configData.thisVersion;<br>
+	              addChild(opening);<br>
+opening.addEventListener(MouseEvent.CLICK, removeIntro, false, 0, true);<br></blockquote>
+	              }</p>
+	            </p>
+              </blockquote>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </div>
+	  <p>The <strong>linesLoaded </strong>function is as simple as can be - all we're doing is assigning the decoded data to our <strong>linesData</strong> object for use later. But we need to use the configuration data right away, so the <strong>configLoaded </strong>function is longer. Basically we define our <strong>configData </strong>object and use its data to define all those configuration variables we passed earlier. </p>
+<p>Then we use the <strong>createBackground </strong>and <strong>createUI </strong>functions to do what they say they do. We need to do it in this order to assure that the UI (the <strong>Toolbar, Options, </strong>and <strong>Inventory</strong>) are always on top of everything else. The <strong>useBox </strong>needs to be instantiated or we'll get errors; it won't actually appear on the stage. Then we add the <strong>opening </strong>movie clip on top of everything else and add an event listener to remove it once the user clicks. If you don't need an intro screen, you can just get rid of this code. </p>
+<p>&nbsp;</p>
+	  <h4><a name="createbackground">createBackground</a></h4>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            
+	            private function createBackground(thisBack:String):void{<br>
+	            
+	            <blockquote>
+	              <p>trace(&quot;Creating new background: &quot;+thisBack);
+                  <p>var playerLoc:MovieClip;<br>
+	                <br>
+	                back = new Background(stage, thisBack);<br>
+	                addChild(back);<br>
+	                obstacles = back.returnObstacles();<br>
+	                for (var i in obstacles)
+                  <blockquote>
+                  addChild(obstacles[i]);</blockquote>
+	              }<br>
+	              </p>
+                </blockquote>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>First we declare the <strong>playerLoc </strong>variable, which will be assigned to the appropriate <strong>startPoint </strong>in our background movie clip. Then we instantiate our <strong>Background </strong>class, passing to it the <strong>stage</strong> (this is the root level of Flash's display structure, and almost all of our classes need to use it) and <strong>thisBack</strong>, which is set at the beginning of the game as the <strong>firstLocation </strong>variable: &quot;tundra.&quot; The Background class will now look for a movie clip called &quot;tundra&quot; in the Library (exported for Actionscript, remember!) and place that in the background. Then it will figure out what items are interactive and store them in appropriate arrays (we'll see how this works when we open the Background.as file). Once it's done this, we need to retrieve that data and store it in Engine's various item arrays in order to use it. So, we call the <strong>Background.returnObstacles </strong>method. The <strong>for...in </strong>loop then adds each obstacle to the display list. We need to use <strong>addChild </strong>in order to change the obstacles' depth value, allowing the player to walk behind and in front of them as appropriate.</p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote>if (restoring){<br>
+                <blockquote>
+playerLoc = new MovieClip();<br>
+playerLoc.x = 0;<br>
+playerLoc.y = 0;<br>
+</blockquote>
+} else if (lastLocation){<br>
+<blockquote>
+var lastLocName = &quot;startPoint_&quot;+lastLocation; <br>
+playerLoc = back.currentBack[lastLocName];<br></blockquote>
+} else {<br>
+<blockquote>
+playerLoc = back.currentBack.startPoint;<br>
+</blockquote>
+}</blockquote>
+              </blockquote>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+	    
+      </div>
+	  <p>This sets the player's location. If we're restoring a saved game, we just place the player at 0,0 (we'll be setting the player's location using the saved data shortly afterward). If the player got here from another background, we place them at the entrance corresponding to that previous background. If they just started the game, we place them at the generic <strong>startPoint</strong>. </p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote>player = new Player(stage, walkRate, targetBuffer);<br>
+	              if (playerLoc.x &gt; stage.stageWidth / 2){
+	              <blockquote>player.scaleX = -playerScale;</blockquote>
+	              }else {
+	              <blockquote>
+                  player.scaleX = playerScale;</blockquote>
+	              
+	              <p>}<br>
+	              player.scaleY = playerScale;<br>
+	              player.x = playerLoc.x;<br>
+	              player.y = playerLoc.y;</p>
+	             
+	                <p>if (restoring){<br>
+	                   <blockquote>saver.dispatchEvent(new Event(&quot;repose&quot;));<br>
+	                  restoring = false;<br> </blockquote>
+	                  }</p>
+                 
+	              <p><br>
+	              addChild(player);<br>
+	              player.addEventListener(&quot;playerWalking&quot;, startDepth, false, 0, true);<br>
+                player.name = playerName;				  </p>
+	            </blockquote>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+	    
+</div>
+	  <p>Now we add the <strong>Player </strong>to the stage. We pass <strong> walkRate</strong> and <strong>targetBuffer</strong> to the Player class so it can use them in its movement calculations. Then we set the Player's scale so the Player appears facing away from the side on which they've just appeared. This calculation assumes that the Player is normally facing to the right. Remember to make your Player symmetrical so this doesn't look weird.</p>
+	  <p>After that we set the Player's scale and location, do a little adjustment if we're restoring a saved game, add the Player to the display list, set its name and add an event listener for <strong>&quot;playerWalking.&quot; </strong>This will call the <strong>startDepth </strong>function, which as we'll see below, continually arranges the depth of the Player and all obstacles to ensure everything is properly lined up in our faux-3D space. </p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote>foreground = back.returnForeground();<br>
+	              for (i in foreground){
+	              <blockquote>addChild(foreground[i]);</blockquote>
+	              }<br>
+	              <br>
+	              usableItems = back.returnItems();<br>
+	              exits = back.returnExits();<br>
+	              for (i in exits){
+	              <blockquote>addChild(exits[i]);</blockquote>
+                }</blockquote>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>Just like we did with the obstacles, we've called methods from the Background class in order to populate Engine's item-related arrays. <strong>foreground </strong>and <strong>exits </strong>should be obvious, and needed to be added as children so their depth can be kept consistent. <strong>usableItems </strong>is every item in the background that has the <strong>_L </strong>property (or, you'll recall, the <strong>_U, _G, </strong>or <strong>_T</strong>). </p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote><span class="style1">// Add event listeners for all the usable items</span><br>
+	              for (i in usableItems){<blockquote>
+	                var thisClip = usableItems[i];<br>
+	                thisClip.buttonMode = true;<br>
+	                thisClip.addEventListener(MouseEvent.CLICK, examine, false, 0, true);<br>
+	                thisClip.gotoAndStop(1);</blockquote>
+                }</blockquote>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+      </div>
+	  <p>This part adds functionality to all of those <strong>usableItems</strong>, allowing us to call the <strong>examine </strong>function when the user clicks on any of them. Setting their <strong>.buttonMode </strong>property to true makes the cursor turn into a little hand when we hover the mouse over them; it's not necessary, but it helps keep your game from turning into a pixel hunt. </p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote>back.currentBack.ground.addEventListener(MouseEvent.CLICK, movePlayer, false, 0, true);</blockquote>
+              </blockquote>
+	          </blockquote>
+	        </blockquote>
+        </blockquote>
+	    
+      </div>
+	  <p>This little line adds functionality to the <strong>ground </strong>in our background clip, allowing the player to move freely about the stage. </p>
+	  <p>&nbsp;</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>
+	          <blockquote>
+	            <blockquote><span class="style1">// Keep the toolbar at the highest depth</span><br>
+	              if (toolbar){<blockquote>
+	                puzzle.newBackground(thisBack);<br>
+	                changeUIDepth();<br>
+	                toolbar.addListeners();<br>
+	                <span class="style1">// Remove any items the player has already picked up</span><br>
+	                var allInv:Array = inv.returnItems(&quot;all&quot;);<br>
+	                for (i in usableItems){<blockquote>
+	                  for (var j in allInv){
+                        <blockquote>
+	                    if (usableItems[i].displayName == allInv[j].displayName)<br>
+	                    <blockquote>usableItems[i].visible = false;</blockquote>
+	                    </blockquote>
+	                  }</blockquote>
+	                }</blockquote>
+                }</blockquote>
+              } </blockquote>
+	          </blockquote>
+          </blockquote>
+	      </blockquote>
+      </div>
+	  <p>This last block of code is only used if the toolbar is already on the stage - in other words, if this is not the first background the player sees upon starting the game. At this point we call the <strong>Puzzle.newBackground </strong>method to let that class know that we have entered a new background. It will then make sure that everything in this scene is set as it should be - if the player has already altered the background in some way, it will be properly altered and not revert to its original state. Then we call <strong>changeUIDepth</strong> so the toolbar and everything else remain on top of the background and characters. We call the<strong> Toolbar.addListeners </strong>method so that the toolbar will show descriptions when we roll over the usable items. Then, as stated, we make sure any item the player has picked up on a previous visit to this background doesn't reappear. </p>
+	  <p>By now you should be getting a feel for how all this code works, so I'm going to just give some overviews of what each function does rather than explain it line-by-line. Hopefully my comments and variable/function names should keep things clear enough. That said, let's go over the rest of these functions.</p>
+	  <h4><a name="changebackground">changeBackground</a></h4>
+	  <p>This function is called when the <strong>&quot;changeBackground&quot; </strong>event is dispatched, which is normally when the player clicks on (and reaches) an EXIT. It removes the current background and all the children that have been added from it, then calls the <strong>createBackground </strong>function so it can set up the new background. You'll note that it removes the children both using <strong>removeChild </strong>and by setting the <strong>.visible </strong>property to false. For some reason removeChild doesn't actually get rid of the children; they can still be clicked on through the new background. Hence the redundant code. If anyone knows how to fix this, I'm all ears.</p>
+	  <h4><a name="createui">createUI</a></h4>
+	  <p>This function puts the user interface on the stage, namely the <strong>Toolbar, Inventory, </strong><strong>Options, </strong>and <strong>Save/Restore. </strong>It adds them to the display list, sets their coordinates, and then makes the Inventory, Options, and Save/Restore invisible (they'll appear once the user clicks the appropriate toolbar buttons). This function also instantiates the <strong>Puzzle </strong>class, which keeps track of the player's progress through the game - what puzzles have been solved, what actions performed, etc. Finally, it adds an event listener for <strong>&quot;endGame&quot;, </strong>which in our case is dispatched by the Puzzle class once the player has solved the final puzzle.</p>
+	  <h4><a name="removeintro">removeIntro</a></h4>
+	  <p>This does exactly what it says, and then it calls the <strong>Puzzle.firstAction </strong>method, which in our case has Al speak his first line of dialog. </p>
+	  <h4><a name="moveplayer">movePlayer</a></h4>
+	  <p>This starts the Player moving if the user has clicked on a spot on the ground, or elected to use/talk to one of the background elements. It only does this if <strong>playerControl </strong>is set to true. It also makes the <strong>UseBox </strong>disappear if it's currently on the stage.</p>
+	  <h4><a name="examine">examine</a></h4>
+	  <p>This function adds the <strong>UseBox </strong>to the stage when the user clicks on a usable item. It only does this if the player has no ENTER_FRAME listener - that is, as long as the player is not currently moving. It also dispatches the <strong>&quot;itemClicked&quot; </strong>event, which will cause Subtitle, Options, and Inventory to disappear if they are currently visible.</p>
+	  <h4><a name="startdepth">startDepth</a></h4>
+	  <p>This is just here to add an ENTER_FRAME event listener that calls <strong>checkPlayerDepth</strong>.</p>
+	  <h4><a name="checkplayerdepth">checkPlayerDepth</a></h4>
+	  <p>This function runs continously as long as the player is walking. It checks the Player's depth in relation to all the obstacles in the scene. If the player's depth needs to be changed, it calls <strong>changePlayerDepth.</strong></p>
+	  <h4><strong><a name="changeplayerdepth">changePlayerDepth</a></strong></h4>
+	  <p>This function sets the Player either behind or in front of the supplied movie clip as needed.</p>
+	  <h4><a name="changeuidepth">changeUIDepth</a></h4>
+	  <p>This function makes sure the user interface is at the highest depth. It does this by resetting everything on the stage, in decreasing order of depth, to an index of 0. This pushes the other items up the index until they're all lined up properly. It has to call the <strong>Background.gotoBack </strong>method for the background movie clip, because it's a child of the Background class and not the Engine.</p>
+	  <h4><a name="endgame" id="subend">endGame</a></h4>
+	  <p>Simple function to add the <strong>ending </strong>movie clip over everything else, and to change the background music to the one specified by <strong>endMusicURL.</strong></p>
+	  <p>&nbsp;</p>
+	  <p>And that's our Engine! Let's move on to the <strong>Puzzle</strong> class to see how we structure the user's game progress.</p>
+	  <p><h3 class="heading"><a name="puzzle">Puzzle.as</a></h3>
+	  <h4><a name="puzzvars" id="substart">Variables</a></h4>
+	  <p>The Puzzle class has a whole bunch of variables, most of which should be easy enough to figure out. But one in particular might stand out to you: <strong>allPuzzles. </strong>This is, as you'd imagine, an object that contains  the status of every aspect of all of the game's puzzles. Basically I'm treating anything you can change in the game world as part of a puzzle. Down in <strong>Puzzle()</strong>, we can see how this works.</p>
+<h4><a name="puzzlefunction">Puzzle()</a></h4>
+	  <p>In the interest of organization I set up the <strong>allPuzzles </strong>object with a separate sub-object for each background in the game: <strong>allPuzzles.room, allPuzzles.hangar, </strong>and <strong>allPuzzles.</strong><strong>tundra. </strong>This seemed like an easy enough way to break up the data and to ensure that each background, when loaded, looks the way it's supposed to. When you create your own game, you can choose to store the data in this way for each of your own backgrounds, or come up with your own system if you prefer, but make sure you keep all your data in the <strong>allPuzzles </strong>object, since it's used to save games.</p>
+	  <p>Each sub-object has custom properties that will make sense if you've played through the demo.</p>
+      <ul>
+        <li><strong>allPuzzles.tundra </strong>has two properties:
+          <ul>
+            <li><strong>skyWeird - </strong>this Boolean keeps track of whether the sky has been flipped by the user pushing the button inside the room. There's no gameplay reason to do this; this feature is just to demonstrate an object that can be used without a custom animation movie clip.</li>
+            <li><strong>skyWeirdCount - </strong>this integer keeps count of how many times the sky has been shown to the player in its altered state. It's only there to make sure that Al the panda only says &quot;whoa&quot; once. </li>
+          </ul>
+        </li>
+        <li><strong>allPuzzles.hangar </strong>has one property:
+          <ul>
+            <li><strong>doorBroken - </strong>a Boolean that keeps track of whether or not the player has thrown the rock at the door</li>
+          </ul>
+        </li>
+        <li><strong>allPuzzles.room </strong>has five properties:
+          <ul>
+            <li><strong>sphereUsed - </strong>whether or not the player has used the pyramid on the sphere</li>
+            <li><strong>boxUsed - </strong>whether or not the player has used the (sharpened) pyramid on the box</li>
+            <li><strong>gotBalloon - </strong>whether or not the player has used the box after breaking it open with the pyramid</li>
+            <li><strong>switchOn - </strong>whether or not the switch is currently on </li>
+            <li><strong>usedSwitch - </strong>whether or not the player has ever pushed the switch </li>
+          </ul>
+        </li>
+</ul>
+      <p>We'll see how each of these comes into play when we get to the <strong>newBackground </strong>function below. </p>
+<p>We set pretty much all our room object properties to false when Puzzle is first instantiated, which happens at the beginning of the game. Note that we also have to set variables to refer to the background, inventory, etc. so Puzzle needs to be the last thing we instantiate in the Engine function, after all our other elements are already present.</p>
+<h4><a name="returnpuzzles">returnPuzzles</a></h4>
+<p>This function simply returns the <strong>allPuzzles</strong> object. It's used by the<strong> SaveRestore </strong>class to save games.
+<h4><a name="restorepuzzles">restorePuzzles</a></h4>
+<p>This sets the <strong>allPuzzles </strong>object to match saved data. It's used by <strong>SaveRestore </strong>to restore games.
+<h4><a name="firstaction">firstAction</a></h4>
+	  <p>This is something of an optional function; all it does in this demo is give Al the Panda his first line. Originally I just did this from <strong>Engine.removeIntro, </strong>but this led to a bug that I was never able to figure out, in which the first subtitle sometimes refused to go away. Moving the functionality to the Puzzle class seemed to fix the problem, although I couldn't tell you why. </p>
+	  <h4><a name="newbackground">newBackground</a></h4>
+	  <p>This function is called whenever the player enters a new background (including when a game is restored), and its job is to check the corresponding puzzle object (<strong>allPuzzles.tundra, allPuzzles.hangar, </strong>or <strong>allPuzzles.room, </strong>remember) and then set up the background accordingly. For example, if the player uses the rock on the door, then goes back to the tundra, the door will still be open when they return to the hangar background. You'll want to create new such sub-objects for any new background you create, and put the pertaining instructions within this function. </p>
+<p>You'll notice my frustration in the comments with the way I set variables for the various scene elements (the rock, pyramid, box, etc.) - I couldn't figure out how to call them based on their displayName property without this goofy for...in loop. I'm sure there's an easier way to do it, so feel free to change it if you know how. And don't bother with the .name property, because the objects get inconsistent instance names when they're added as children.</p>
+	  <h4><a name="gotitem">gotItem</a></h4>
+	  <p>As the comment says, there's no code here, but it gets called every time the player adds an item to the inventory. So if you need something special to happen when a particular item is received, you can put it in here.</p>
+	  <h4><a name="useditem">usedItem</a></h4>
+	  <p>This method is called whenever the player uses an item but no custom movie clip is used; in this demo, that only occurs when the player uses the switch. Since the switch can be used more than once, there are a bunch of conditional statements here to make sure that the switch behaves properly. </p>
+	  <h4><a name="performedaction">performedAction</a></h4>
+	  <p>Just like newBackground, this will be called whenever the player performs a context-specific action (i.e. one of the movie clips in the alpaca.swf Library that's under the <strong>actionMCs </strong>folder). All these movie clips are called by the <strong>PlayerAction </strong>class, and this function gets called after the clip is finished playing. Then it sets the background to react properly to that action; for example, when the player uses the pyramid on the box, it makes sure the box's movie clip is set to the frame <strong>open, </strong>so it has the tear on top. It also set's the box's <strong>lookTag </strong>property to &quot;2,&quot; so when the player looks at the box, a new description will be used (more on this functionality in the <strong>Speech </strong>and <strong>Subtitle </strong>classes). And it changes the properties of the background puzzle objects accordingly, like <strong>roomPuzzle.boxUsed</strong> in this example.</p>
+	  <h4><a name="spokedialog" id="subend">spokeDialog</a></h4>
+	  <p>Yet another empty method; this gets called each time the player and another character get through a dialog option. If you a puzzle can be solved through dialog - say, convincing someone to get out of your way - then this is where you can put the corresponding code. </p>
+	  <p>&nbsp; </p>
+	  <p>And that's it for <strong>Puzzle</strong>, at least at the moment. This class is designed to be open-ended and completely customizable, so if you need some random bit of code for anything in your game to work, here is probably the place to put it. Like I said before, the rest of the classes we're about to go over should not need to be changed at all for your brand-new game to function. Of course, they <em>can </em>be changed in any way you like, but if you're happy with ALPACA's functionality then you shouldn't need to bother with them. For that reason I'm going to give even briefer overviews for all these; to really sort out how they work, you'll need to dive into the code itself, which hopefully is easy enough to understand on its own. We'll hit these in alphabetical order.</p>
+	  <h2 class="heading"><a name="background">Background.as</a></h2>
+	  <!--
+<h4>Variables</h4>
+<p>These should be self-explanatory.</p>
+<h4>Background()</h4>
+<p>As soon as the Background class is loaded, it  adds the proper background movie clip from the library to the stage. Then it goes through that movieclip and looks at instance names to determine which items are interactive, which are obstacles, etc. This is why you need to format your instance names properly. It then makes all the functional parts of the different items - nodes, usePoints, etc. - invisible.</p>
+<h4>showExit / hideExit</h4>
+<p>These are quick functions that make the <strong>EXITs</strong> appear only when the mouse rolls over them.</p>
+<h4>leaveRoom</h4>
+<p>This function is called when the user clicks on an <strong>EXIT</strong>. It sets target coordinates based on the EXIT's corresponding <strong>startPoint, </strong>then extracts the  next background from the EXIT's instance name and writes it to <strong>Engine.newBack. </strong>If the Player isn't already too close to the EXIT, it then starts the Player walking toward the target coordinates.</p>
+<h4>reachedExit</h4>
+<p>Once the player reaches the exit, this function dispatches the <strong>&quot;changeBackground&quot; </strong>event, at which point the Engine class will create the new background.</p>
+<h4>checkForExit</h4>
+<p>This checks if the Player is already at or very close to the EXIT.</p>
+<h4>gotoBack</h4>
+<p>This sets <strong>currentBack </strong>to an index of 0; it's called by the <strong>Engine.changeUIDepth </strong>method.</p>
+<h4>returnObtacles /returnForeground / returnItems / returnExits</h4>
+<p>As advertised, these functions simply return their corresponding arrays when another class needs them.</p>
+<h4>clearStage</h4>
+<p>This removes the background clip from the display list and clears the <strong>obstacles </strong>and <strong>usableItems </strong>arrays so that a new background can be created. </p>-->
+	  <p>The<strong> Background </strong>class loads backdrop movie clips from the library, then adds functionality to all the significant items (obstacles, lookable and gettable items, EXITs, etc.) based on their instance names. It's not associated with any single movie clip in the alpaca.fla library.</p>
+	  <h2 class="heading"><a name="dialog">Dialog.as</a></h2>
+	  <p>This class controls all the back-and-forth dialog in your game. If the user selects the <strong>Talk to [character] </strong>option during play, this gets called; it also gets called in some cases when a player uses an item on any talk-to-able character (like using the pyramid on the door). It takes all of its instructions from the <strong>data/speechlines.js </strong>file, so let's go over how that file is structured:</p>
+	  <h4><a name="dialoglines" id="substart">speechlines.js</a></h4>
+	  <p>The <strong>speechlines.js </strong>file contains all the lines spoken in the demo, including Al's obvservational remarks and the full dialog with the door. This is where the text for the subtitles comes from, but you'll need it even if the subtitles are off - it tells the <strong>Dialog </strong>class how many lines are in a particular exhange, among other things. </p>
+	  <p>The various lines of dialog are within the <strong>&quot;dialog&quot;</strong> object, arranged by character (in this case, the DOOR is the only character).</p>
+	  <div class="code">
+	    
+	    <p>&quot;dialog&quot;:{</p>
+	    <blockquote>
+	      &quot;DOOR&quot;:{
+	        <blockquote>
+	        &quot;talk&quot;:[
+	          <blockquote>
+	          {
+	            <blockquote>
+	            &quot;option&quot;: &quot;Hello light circle door thing!&quot;,<br>
+                &quot;response&quot;:[<br>
+<blockquote>[&quot;door&quot;,&quot;I'm not going to acknowledge such a dumb greeting.&quot;],<br>
+  [
+  &quot;player&quot;,&quot;I'm not going to acknowledge such a sassy response.&quot;]</blockquote>
+  ]
+              </blockquote>
+	          }, 
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </div>
+	  <p>The<strong> </strong>character name has to match the character's <strong>displayName </strong>property. That property is an all-caps version of the first part of the character's instance name within the .fla file (in this case, <strong>door_T</strong>).</p>
+	  <p>The <strong>option</strong> property shows the line that will appear as an option for the player to choose; it's also the first line the character will say. All the lines that come after that are contained in the<strong> response </strong>array that follows. Each line in this array is a sub-array containing the character who speaks, followed by their line. Despite the names, right now the class only differentiates between &quot;player&quot; and &quot;not player.&quot; <strong>If it's not the player talking, the Dialog class defaults to the character that the user clicked on when the dialog started.</strong> If you want another character in the scene to take part in the discussion, you'll need to tweak the code. </p>
+<p>In the case of the second <strong>option</strong>, a new menu with a new set of dialog options is created using the <strong>submenu </strong>property.</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        
+	        <blockquote>{
+	         <blockquote>
+	            <p>&quot;option&quot;:&quot;Can you open this door?&quot;,<br>
+	            &quot;response&quot;:[<br>
+	            <blockquote>[&quot;door&quot;:&quot;I can, but you have to say the password.&quot;]</blockquote>
+	            ],<br>
+	            &quot;submenu&quot;:[
+	            <blockquote>{<br>
+                <blockquote>
+&quot;option&quot;:&quot;Fruenlaven.&quot;,<br>
+&quot;response&quot;:[
+<blockquote>
+[&quot;door&quot;,&quot;Nothing doing, Yakko.&quot;]</blockquote>
+]<br></blockquote>
+},<br>
+{<blockquote>
+&quot;option&quot;:&quot;Mirelurk stew.&quot;,<br>
+&quot;response&quot;:[
+<blockquote>
+[&quot;door&quot;,&quot;Go nuke yourself.&quot;]</blockquote>
+
+]</blockquote>
+},<br>
+{<blockquote>
+&quot;option&quot;:&quot;'The password.'&quot;,<br>
+&quot;response&quot;:[
+<blockquote>
+[&quot;door&quot;,&quot;There goes any respect I might have had for you.&quot;]</blockquote>
+]</blockquote>
+},<br>
+{<blockquote>
+&quot;option&quot;:&quot;I don't know it.&quot;,<br>
+&quot;response&quot;:[<blockquote>
+[&quot;door&quot;,&quot;I appreciate your honesty.&quot;],<br>
+[&quot;player&quot;,&quot;Really?&quot;],<br>
+[&quot;door&quot;,&quot;No!  Piss off!&quot;]</blockquote>
+]</blockquote>
+}</blockquote>
+]</blockquote>
+
+},</blockquote></blockquote></blockquote>
+          </blockquote>
+        </blockquote>
+</div>
+	  <p>Once the player selects an option from this submenu and the dialog runs its course, they'll be taken back to the original menu. <strong>Nested submenus are not currently supported</strong>, but they would not be too hard to add. </p>
+	  <p>You'll note that the fourth option has an <strong>action </strong>property:</p>
+	  <div class="code">
+	    <blockquote>
+	      <blockquote>
+	        <blockquote>{<br>
+	        <blockquote>&quot;option&quot;:&quot;Never mind.&quot;,<br>
+&quot;action&quot;:&quot;end&quot;</blockquote>
+}</blockquote>
+          </blockquote>
+        </blockquote>
+      </div>
+	  <p>If any option has an <strong>action </strong>property set to <strong>&quot;end&quot;, </strong>then the dialog will be over once the last line is spoken. </p>
+	  <p>A little farther down we find a <strong>useObject </strong>property, which allows us to initiate dialog by using an item on a character:</p>
+	  <div class="code">
+	    
+	    <blockquote>
+	      <blockquote>
+	        
+	        <blockquote>
+	          &quot;useObject&quot;:{
+	            <blockquote>
+	            &quot;PYRAMID&quot;:[<br>
+	            <blockquote>
+	              <blockquote>
+	                [&quot;player&quot;,&quot;I wield the mysterious pyramid! Allow me passage!&quot;],<br>
+	                [&quot;door&quot;,&quot;YOU...SHALL NOT...PASS!&quot;],<br>
+                  [&quot;player&quot;,&quot;Curses!&quot;]</blockquote>
+                  ]
+                </blockquote>
+              </blockquote>
+            }</blockquote>
+          </blockquote>
+        </blockquote>
+      </div>
+	  <p>Again, this will work based on the <strong>displayName </strong>property of the object used. When the user tries to use an inventory item on something, the <strong>DraggedItem </strong>class will automatically search the <strong>speechlines.js </strong>file for a dialog option (after first looking for an action movie clip, but we'll get to that in a moment), so you can create these dialogs simply by adding to the JSON file.</p>
+	  <h4><a name="usingaudio" id="subend">Using Audio Clips for Dialog Lines</a> </h4>
+	  <p>Of course, you may also want to use full audio for your characters, in which case you will also need to put the associated audio clips into the .fla file and export them for Actionscript. </p>
+	  <p>I also experimented with some code to grab external .mp3 files for each line. I decided not to go with this technique because there was noticable lag time while the .swf loaded the audio, and it made things sound awkward. But I left the code commented out, if you want to try to implement it yourself. </p>
+	  <p>As it stands now, you'll need to import the audio clips individually to the .fla file. The names need to follow this format: <strong>dialog_[target character's displayName]_[option number]_[line number]</strong>. Option and line numbers, like array indexes, <strong>start at 0, not 1! </strong>You can change this if it annoys you, but I found it made for cleaner code.</p>
+	  <p>So, for example, if you talk to the door and pick the very first option, the first audio clip played will be <strong>dialog_DOOR_0_0. </strong>This will be followed by <strong>dialog_DOOR_0_1, </strong>and then <strong>dialog_DOOR_0_2</strong>. At that point the Dialog class will see that the XML file contains no more lines for that option, and stop. </p>
+	  <p>For submenu options, the format is this: <strong>dialog_[target character's displayName]_[option number]_SUB_[suboption number]_[line number]. </strong>So for our first suboption name in this example (&quot;Fruenlaven&quot;), we'd use <strong>dialog_DOOR_1_SUB_0_0.</strong></p>
+	  <p>If you don't want to use audio, set the &quot;useAudio&quot; property in <strong>data/config.js </strong>to false and the audio-related code will be ignored.</p>
+	  <h2 class="heading"><a name="draggeditem">DraggedItem.as</a></h2>
+	  <p>This class allows the user to drag inventory items over the stage and attempt to use them on different objects. It gets called when the user selects the &quot;use&quot; option on any item in the inventory.  It grabs <strong>[item displayName]Proper </strong>from the library (remember <a href="#proper">our earlier discussion</a> about this), places it under the mouse cursor, and then hides the mouse so the user only sees the item being dragged around.  A Glow filter is applied when it passes over an item in the <strong>Engine.usableItems </strong>array. </p>
+	  <p>When the user clicks, it checks to see if it's currently over any of the usable items.  If it's not, it disappears, and player control
+      returns to normal.  If it is, it checks to see if the player can use it.  This is done in three steps:</p>
+	  <ol>
+	    <li>DraggedItem searches the library for an <strong>action movie clip (actionMC)</strong>, like the ones in alpaca.swf's actionMC folder. If it finds one, it instantiates a <strong>playerAction </strong>object to handle that movie clip. If it doesn't...<br>
+        </li>
+	    <li>It checks to see if there's dialog resulting from this combination. For example, in the demo, if the user uses the pyramid on the door, a dialog results. DraggedItem looks through the JSON file to see if this is an option. If it's there, a <strong>Dialog </strong>is instantiated. If it's not...<br>
+        </li>
+	    <li>It instantiates a <strong>Speech </strong>object so the player will comment on why this didn't work. The Speech class will take care of the rest.</li>
+      </ol>
+	  <h2 class="heading"><a name="inventory">Inventory.as</a></h2>
+	  <p>The <strong>Inventory </strong>also appears a movie clip in the alpaca.fla library.  You can edit its look there.  All the inventory items, however, are dynamically loaded from the library as the player gets them.  These items need to be named using the format <strong>[item name]Inv, </strong>so remember to add one of these each time you create a Gettable item.</p>
+	  <p>The Inventory only supports two rows of <strong>eight items total</strong> right now, and no scrolling; for games with a lot of inventory items you might want to add that functionality.  </p>
+	  <p>Items are automatically arranged based on when they were picked up, and get rearranged when the user eliminates an item.</p>
+	  <p>The Inventory will check to make sure that an item has not already been picked up whenever the player gets something.  This is important because players can sometimes override the grabbing animation by clicking elsewhere on the stage, and this can result in duplicate items.</p>
+	  <h2 class="heading"><a name="muzak">Muzak.as</a></h2>
+	  <p>This is the background music class for the game. It loads a provided external .mp3 and plays it, looping it once the sound clip ends.</p>
+	  <p>It can also change the volume of the music and stop it completely.  It can't load a new music file; the <strong>Options</strong> class does that by instantiating a new Muzak object.</p>
+	  <h2 class="heading"><a name="options">Options.as</a></h2>
+	  <p>This class controls the options menu, which you'll also find in the <strong>alpaca.fla</strong> library. There are four different controls:</p>
+	  <h4><a name="subtitles" id="substart">Subtitles</a></h4>
+	  <p>The on and off buttons control the value of the <strong>subtitlesOn </strong>Boolean in the <strong>Options </strong>class. The <strong>Speech </strong>class will check this variable (using the public <strong>getSubStatus </strong>method) before creating a subtitle whenever the player or another character speaks.</p>
+	  <h4><a name="musicvol">Music Volume</a></h4>
+	  <p>This slider will update the <strong>Muzak </strong>class with a new volume value as long as the user is dragging it. </p>
+	  <h4><a name="speechvol">Speech Volume</a></h4>
+	  <p>This slider will update the <strong>speechVol </strong>variable within this class as the user drags it. The <strong>Speech </strong>class will check this variable using the <strong>returnVol </strong>method before any line of speech is played; speech volume won't actually be affected while any line is playing. </p>
+	  <h4><a name="animspeed" id="subend">Animation Speed</a></h4>
+	  <p>This actually just changes the framerate of the .swf file. The values stretch from 5  to 25 fps. This is my nod to a feature in some of the old Sierra games that let you speed up how fast your character walked, so you wouldn't get too bored as you traversed the same screens over and over. </p>
+	  <p>I've encountered a bug where Flash locks up sometimes when changing the framerate. This only seems to happen while previewing the demo in Flash, and not while running the .swf file through Flash player, but it's worth looking into if it's a widespread problem. </p>
+	  <p> </p>
+	  <h2 class="heading"><a name="playerclass">Player.as</a></h2>
+	  <p>This is one of the most complicated of all the classes; it deals almost entirely with the <strong>Player's </strong>movement. The player is set to walking via the public method <strong>startWalking, </strong>which takes in the X and Y coordinates to which Al needs to walk. His movement toward that point is a matter of simple geometric math, but it's the obstacles that make things complex.</p>
+	  <p>In an nutshell, the Player class starts moving Al in a straight line toward his goal, while constantly running a hit detection check with every item in the <strong>Engine.obstacles </strong>array. If it detects a hit with any item, it determines where the Player movie clip is located in relation to the obstacle. It does this by essentially drawing a cross at the center of the obstacles and dividing the stage into corresponding quadrants. So the Player will be either on the Upper Left, Upper Right, Lower Right, or Lower Left of the obstacle. Then the target coordinates are assigned a quadrant based on where they lie in relation to the obstacle. </p>
+	  <p>Based on this, the Player class then figures out a path along the different <strong>nodes </strong>(<a href="#usepoint">remember those?</a>) that will take it most sensibly toward the target coordinates. There's not a lot of science to this; I just figured out which path seemed the most sensible on my own and used a big switch statement to assign the proper one. It's far from perfect, but it generally works well enough. </p>
+	  <p>The Player will then be sent to each node in the proper order. Once the Player has naviagated around the obstacle, a new path is calculated to the target coordinates and we're back to where we started. The hit detection is still running, so the Player can navigate around as many obstacles as you'd like.</p>
+	  <p>One point to remember: <strong>keep the obstacles a good distance from each other</strong>. The whole system is bound to fail if the Player tries to navigate around two obstacles at once. In fact, depending on your design, you might not need to create any obstacles at all. </p>
+	  <h2 class="heading"><a name="playeraction">PlayerAction.as</a></h2>
+	  <p>This class deals with instantiating unique movie clips for actions the user performs. You can find the movie clips in question in the <strong>actionMCs </strong>folder in the <strong>alpaca.fla </strong>file. When Al throws the rock at the door, or punches the pyramid through the box, these are the clips you see, and they're all controlled by this class. </p>
+	  <p>The <strong>PlayerAction </strong>class sets the Player walking toward whatever the target is that will be associated with the movie clip. Once the Player has reached the target's <strong>usePoint, </strong>it will make both the Player and the target item invisible and place the appropriate movie clip from the library onto the stage. At this point the mouse cursor will disappear and the user will not be able to control anything until the clip is finished (<strong>Engine.playerControl </strong>will be set to false). </p>
+	  <p>Each movie clip in the actionMCs folder has an action placed on its final frame: </p>
+	  <p class="code">stop();<br>
+      dispatchEvent(new Event(&quot;clipFinished&quot;));</p>
+	  <p><strong>This is the only way that the PlayerAction class knows the movie clip is finished. </strong>Make sure you don't forget it!</p>
+	  <p>Once the clip is over, PlayerAction removes it, makes the Player and the target visible again, and returns control to the user. Then it notifies the <strong>Puzzle </strong>class that this action has been performed, so any results of the action are determined there.</p>
+	  <p><strong>PlayerAction doesn't scale or position the movie clip in any way, so you have to make sure on your own that it lines up properly with your background. </strong></p>
+	  <h2 class="heading"><a name="rightclickmenu">RightClickMenu.as</a></h2>
+	  <p>As I've mentioned, this class is only semi-functional. It changes the context menu that appears when the user alternate-clicks on the .swf in order to provide a link to the ALPACA site. Depending on what the user clicks on, though, the changes might not appear. It's not mission-critical, so I haven't had time to fix it. </p>
+      <h2 class="heading"><a name="saverestore">SaveRestore.as</a></h2>
+<p>This class deals with saving and loading games. You'll find it as a MovieClip in the project's library, and you can edit its look there.</p>
+<p>Most of the code here deals with the funcionality of the Save/Restore dialog box - the actual saving and restoring is relatively simple. <strong>SaveRestore</strong> simply grabs the player's current location, the puzzle settings from the <strong>Puzzle</strong> class, the options settings from the <strong>Options </strong>class, and the player's inventory (both current and historical) from the <strong>Inventory </strong>class. Then it writes these into an object, encodes this as a JSON string, and saves it to Flash's local memory, which functions a lot like browser cookies. Restoring simply brings this data back up and distributes it to those three classes, which each have their own methods for restoring it. </p>
+<p>An important note: <strong>saved games will not last forever. </strong>I'm not sure how often Flash player wipes its local memory, but don't count on players being able to access these saved games a year from now. Also, since this is local memory, the Flash player on the user's computer stores the data. They won't be able to access their saves on another computer.</p>
+<p>There's some places in the code set aside for implementing external save games - basically the JSON string would get sent to a server-side script, which could write the game to a .js file, and this could be accessed later for restoring the game. This wouldn't be hard to do; the tricky part would be figuring out how to ID and organize the saves. Probably a login screen at the beginning would be necessary, so players could access their saves from anywhere. Naturally this would require a lot of extra work, and for games that take less than an hour to complete, it's probably not necessary. But it's a good idea in theory and I'd encourage people to take a crack at it.</p>
+<h2 class="heading"><a name="speech">Speech.as</a></h2>
+	  <p>The <strong>Speech </strong>class handles all the player character's non-dialog lines. It's set up to function with and without actual audio. This demo uses audio, but setting <strong>useAudio</strong> in the <strong>config.js </strong>file to false, you can easily change this. If you do choose to forgo audio, you might want to remove the on/off controls for subtitles in the <strong>Options </strong>class.</p>
+	  <p>There's also some commented code in here that will grab all the audio lines from external .mp3s instead of the library. As I said earlier, this can create some serious lag, but it will keep the .swf file size down if that's a priority for you. </p>
+	  <p>Speech will search the library for an appropriate audio clip; if it doesn't find it, it will default to the <strong>[target item name]_usenot </strong>line. If it doesn't find that, it will finally default to the <strong>generalNo </strong>line (in this demo, that's &quot;Nah, I don't think I'm gonna do that&quot;). </p>
+	  <p>If you're not using audio, it will do basically the same thing, but with the <strong>speechlines.js </strong>file. </p>
+	  <p>The Speech class will also make use of the <strong>lookTag </strong>attribute, if the target item has one. This allows you to change the description of something once the player has altered it - like the box, once it's open, and once the player has removed the balloon. You can keep changing the lookTag as much as you like, and you're not limited to numbers, although I found that easiest.</p>
+	  <div class="code">&quot;BOX&quot;:{<br>
+	    <blockquote>
+&quot;look&quot;:&quot;It's a box.  Apparently an extremely boring one.&quot;,<br>
+&quot;look2&quot;:&quot;It's still boring, but now it's boring with a big hole in the top!&quot;,<br>
+&quot;look3&quot;:&quot;That's the box I got the balloon from.  I take issue with the label.&quot;,</blockquote>
+      </div>
+	  <p>As you can see, this part of the <strong>speechlines.js </strong>file (everything within the <strong>observations </strong>property) arranges all the lines based on the target item. If you use an inventory item on something, the line will be under the target, with a tag in the format: <strong>&quot;used[ITEM]&quot;</strong></p>
+	  <div class="code">&quot;PYRAMID&quot;:{
+	    <blockquote>&quot;look&quot;:&quot;A mysterious pyramid.  It's oddly compelling...&quot;,<br>
+&quot;look2&quot;:&quot;That is one super-sharp pyramid!&quot;,<br>
+&quot;get&quot;:&quot;I'm sure I can find a good, mysterious use for this.&quot;,<br>
+&quot;useHANGAR&quot;:&quot;This thing doesn't need a whole hangar to store it.&quot;,<br>
+&quot;useLEDGE&quot;:&quot;This thing is much too mysterious to just hurl off a cliff like that.&quot;,<br>
+&quot;useWALL&quot;:&quot;I'd hang this up, but I don't think the colors would match.&quot;,<br>
+&quot;useBOX&quot;:&quot;It's not quite sharp enough.  I know it looks like it is, but it isn't.  Trust me.&quot;,<br>
+&quot;useSPHERE22&quot;:&quot;The pyramid is sharp enough.&quot;,<br>
+&quot;usenot&quot;:&quot;I don't think I need to rub a pyramid against that.&quot;</blockquote>
+},</div>
+	  <p>You'll notice something a little weird at the bottom - <strong>&quot;useSPHERE22&quot;</strong>. No, that's not the 22nd lookTag that's been added to it - it looks like that because both the pyramid and the sphere have lookTags of &quot;2&quot; at this point, and both are automatically concatenated to the end of the string. It's messy, but I was too lazy to fix it, since it doesn't come up often.You may feel otherwise.</p>
+	  <h2 class="heading"><a name="subtitle">Subtitle.as</a></h2>
+	  <p>This class, naturally, creates subtitles. It does all the drawing with code, so it's not associated with a library movie clip. It uses a supplied <strong>lineID </strong>to track down the appropriate text within the <strong>speechlines.xml </strong>file. Then it draws a box to fit the length of the text. The box gets placed either over the Player or over the target character (during a dialog). There's some code here to nudge the box inward if it strays outside the edges of the stage. </p>
+	  <p>If sound is being used, the subtitle will remove itself once the audio clip is finished and the <strong>Speech </strong>class dispatches the <strong>removeSub </strong>event. If you're not using sound, the subtitle will stay in place until the user clicks (although the Player's mouth will stop moving after an interval based on the length of the text). </p>
+	  <h2 class="heading"><a name="toolbar">Toolbar.as</a></h2>
+	  <p>This class is attached to the <strong>Toolbar </strong>movie clip in <strong>alpaca.swf. </strong>It controls the buttons that bring up the inventory and the options menu. It also places text on the lower right of the screen to indicate each thing the player is mousing over, or actions they can perform (&quot;Use PYRAMID on DOOR&quot;, for instance).</p>
+	  <h2 class="heading"><a name="usebox">Usebox.as</a></h2>  
+	  <p>
+	    The <strong>Usebox </strong>class is attached to a movie clip in <strong>alpaca.swf</strong>. It's the crux of ALPACA's interactivity, but it's not as complicated as it might look. As you saw when you played the demo, the Usebox gets instantiated any time the user clicks on an interactive item.  As soon as it appears, a 2.5-second timer starts. If the user doesn't click on either button in that time frame, it will disappear. It also disappears when the user clicks on something else.
+      </p>
+	  </p> 
+	  <p>The right-hand button will be set to &quot;use&quot; by default, but change to &quot;talk&quot; if the target item (the door, in the demo) is talk-to-able.</p>
+	  <p>If the user selects the &quot;look at&quot; option, it will simply create a <strong>Speech</strong> object for the appropriate line. If the user chooses to use or talk to the item, it will check to see if the item is in fact usable (remember, talkable items are usable by default). If it's not, it will have the player speak the <strong>[item display name]_use </strong>line.</p>
+	  <p>If the item is usable, the <strong>Player </strong>will be sent to its <strong>usePoint's</strong> coordinates. Once the Player is there, the Usebox class will have the player pick up the item (if it's <strong>gettable</strong>), start a <strong>Dialog</strong> (if it's <strong>talkable</strong>), or manipulate the item (if it's just <strong>usable</strong>).</p>
+	  <p>To manipulate the item, the Usebox class looks for an appropriate action movie clip in the library. If it finds one, it creates a <strong>PlayerAction </strong>object to handle it. If it doesn't, it defaults to the Player's <strong>grab </strong>animation. In the demo, the latter option is used when the user pushes the switch inside the room.</p>
+	  <p>Once the appropriate action has been taken, the Usebox removes itself from the stage.</p>
+	  <p>&nbsp; </p>
+	  <h2 class="heading"><a name="summary">Summary</a></h2>
+	  <p>And that's our tour through ALPACA 2.0! Remember, you can change anything and everything in this code to suit your tastes and needs. But if you're not one for heavy programming, you can do most of your game design using just the .fla file. Down the road, I may try to create a more intuitive API for putting together puzzles and functionality, but first I'll see how people react to ALPACA as it is. As with any open source project, contributions are greatly appreciated. </p>
+	  <p>&nbsp;</p>
+	  <h2 class="heading"><a name="improve">Possible Future Improvements</a></h2>
+	  <p>There's a lot that can be done with ALPACA 2.0, but there are also a wealth of possible features that could be added to give designers more freedom. Here's a list of some that struck me while I was finishing up this version; think you can write these in? Go for it!</p>
+	  <ol>
+	    <li><strong>Scrolling backgrounds. </strong>Right now backgrounds are static, and limited in scale. Creating scrolling backgrounds would be tricky with the current obstacle-avoidance system, but could be worth the effort.</li>
+	    <li><strong> Expanded dialog options. </strong>Multiple characters, nested suboptions leading to more conversation branches, and the like could make this system more robust.</li>
+	    <li><strong>An external file for all the Puzzle class's settings. </strong>Having to rework the code and recompile the project every time you want to change the gameplay can get cumbersome. I'd love to be able to put all the Puzzle sub-objects into an external JSON file and make things easier to manipulate, but it would mean a lot of clever retooling, so I didn't have time for it yet.</li>
+	    <li><strong>External save games. </strong>See my description of <a href="#saverestore">SaveRestore</a> above.</li>
+	    <li><strong>A more dynamic art asset system. </strong>If backgrounds and other art were pulled from external files, it would be easy to change assets to suit your taste without having to re-export the .swf file.</li>
+	    <li><strong>A context menu that actually works. </strong>I was stumped by this one, but if you can get <strong>RightClickMenu </strong>to work fully, I owe you a beer. </li>
+      </ol>
+<p>That's just a preliminary list to get some ideas rolling. The sky's the limit.</p>
+<p>&nbsp;</p>
+	  <script type="text/javascript">
+<!--
+var contents = document.getElementById('contents');
+var contentHTML = '';
+for (var i = 0; i < document.anchors.length; ++i){
+	var added = '<li><a href= \"#' + document.anchors[i].name + '\">' + document.anchors[i].innerHTML + '</a></li>';
+	if (document.anchors[i].id == 'substart'){
+		added = "<ol>"+added;
+	}
+	if (document.anchors[i].id == 'subend'){
+		added = added + "</ol>";
+	}
+	contentHTML = contentHTML + added;
+}
+contents.innerHTML = contentHTML;
+-->
+  </script>
+ </div>
+</body>
+</html>
