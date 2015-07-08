@@ -8,8 +8,7 @@
     "DEFAULT": "This is my default line for not doing something."
   },
 
-  "dialog":{
-   /*
+  "dialog":{   
       "CHARACTERNAME":{
            "talk":[
               {
@@ -22,9 +21,9 @@
               {
                 "option":"This is the second speech option.",
                 "response":[
-                  ["character", "This is just a one-line response."],
+                  ["character", "This is just a one-line response."]
                 ]
-              },
+              }
            ], 
           "useObject": {
             "OBJECTNAME":[
@@ -33,6 +32,6 @@
              ]
           }
       }
-    */
+    
   }
 }

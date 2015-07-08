@@ -81,11 +81,11 @@
 		} 
 		
 		private function linesLoaded(e:Event):void{
-			linesData = JSON.decode(speechLoader.data);
+			linesData = JSON.parse(speechLoader.data);
 		}
 		
 		private function configLoaded(e:Event):void{
-			configData = JSON.decode(configLoader.data);
+			configData = JSON.parse(configLoader.data);
 			useAudio = configData.useAudio;
 			playerScale = configData.playerScale;
 			walkRate = configData.walkRate;

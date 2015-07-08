@@ -72,7 +72,7 @@
 					saveNum = "save" + i;
 					if (shared.data[saveNum]){
 						slotsTaken[i-1] = true;
-						var thisSave = JSON.decode(shared.data[saveNum]);
+						var thisSave = JSON.parse(shared.data[saveNum]);
 						this[saveNum].savedetail.text = thisSave.datetime;
 						this["restore"+i].savedetail.text = thisSave.datetime;
 						
@@ -216,7 +216,7 @@
 			var dateString = thisDate.toLocaleString();
 			allSaveData.datetime = dateString;
 			
-			var jsonSave = JSON.encode(allSaveData);
+			var jsonSave = JSON.stringify(allSaveData);
 			trace("Saving: " + jsonSave);
 			
 			//Save data in local memory
@@ -262,7 +262,7 @@
 				if(shared.data[saveNum]){
 					trace("Restoring: " + shared.data[saveNum]);
 					allSaveData = new Object;
-					allSaveData = JSON.decode(shared.data[saveNum]);
+					allSaveData = JSON.parse(shared.data[saveNum]);
 				}
 			}
 			
